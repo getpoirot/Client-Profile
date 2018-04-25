@@ -1,11 +1,11 @@
 <?php
 namespace Module\ProfileClient\Services;
 
+use Poirot\Ioc\instance;
 use Module\ProfileClient\Module;
+use Poirot\ApiClient\Interfaces\Token\iTokenProvider;
 use Poirot\Application\aSapi;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\OAuth2Client\Federation\TokenProvider\TokenFromOAuthClient;
-use Poirot\OAuth2Client\Grant\Container\GrantPlugins;
 use Poirot\ProfileClient\Client;
 use Poirot\Std\Struct\DataEntity;
 
@@ -19,7 +19,10 @@ class ServiceClientOfProfile
     /** @var string Service Name */
     protected $name = self::NAME;
 
+    /** @var string */
     protected $serverUrl;
+    /** @var iTokenProvider */
+    protected $tokenProvider;
 
 
     /**
@@ -30,17 +33,11 @@ class ServiceClientOfProfile
      */
     function newService()
     {
-        $serverUrl = $this->getServerUrl();
-
-        /** @var \Poirot\OAuth2Client\Client $oauthClient */
-        $oauthClient = $this->services()->get('/module/OAuth2Client/services/OAuthClient');
         $c = new Client(
-            $serverUrl
-            , new TokenFromOAuthClient(
-                $oauthClient
-                , $oauthClient->withGrant(GrantPlugins::CLIENT_CREDENTIALS, ['scopes' => ['profile']])
-            )
+            $this->getServerUrl()
+            , $this->getTokenProvider()
         );
+
 
         return $c;
     }
@@ -56,6 +53,14 @@ class ServiceClientOfProfile
         $this->serverUrl = $serverUrl;
     }
 
+    /**
+     * @param iTokenProvider $tokenProvider
+     */
+    function setTokenProvider(iTokenProvider $tokenProvider)
+    {
+        $this->tokenProvider = $tokenProvider;
+    }
+
     function getServerUrl()
     {
         if (! $this->serverUrl )
@@ -67,6 +72,25 @@ class ServiceClientOfProfile
 
         return $this->serverUrl;
     }
+
+    function getTokenProvider()
+    {
+        if (! $this->tokenProvider )
+        {
+            $tokenProvider = $this->_getConf(self::CONF, 'token_provider');
+            if (! $tokenProvider instanceof iTokenProvider)
+                $tokenProvider = new instance($tokenProvider);
+
+            $this->setTokenProvider($tokenProvider);
+        }
+
+        if ( empty($this->tokenProvider) )
+            throw new \Exception('Token Provider For Client Profile is Empty.');
+
+
+        return $this->tokenProvider;
+    }
+
 
     // ..
 
@@ -96,8 +120,6 @@ class ServiceClientOfProfile
         ## Retrieve requested config key(s)
         #
         $keyconfs = func_get_args();
-        array_shift($keyconfs);
-
         foreach ($keyconfs as $key) {
             if (! isset($config[$key]) )
                 return null;

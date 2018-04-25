@@ -4,7 +4,6 @@ namespace Poirot\ProfileClient\Client;
 use Poirot\ApiClient\aPlatform;
 use Poirot\ApiClient\Interfaces\iPlatform;
 use Poirot\ApiClient\Interfaces\Request\iApiCommand;
-use Poirot\ApiClient\Interfaces\Response\iResponse;
 use Poirot\Connection\HttpWrapper;
 use Poirot\Psr7\HttpResponse;
 use Poirot\Std\Exceptions\exUnexpectedValue;
@@ -12,6 +11,7 @@ use Poirot\Std\Type\StdTravers;
 use Poirot\ProfileClient\Client\PlatformRest\ServerUrlEndpoints;
 
 
+// TODO using cache for commands
 class PlatformRest
     extends aPlatform
     implements iPlatform
