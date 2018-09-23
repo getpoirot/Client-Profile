@@ -62,10 +62,13 @@ namespace Module\ProfileClient
 
 namespace Module\ProfileClient
 {
-    use Poirot\ProfileClient\Client;
+    use Poirot\ProfileClient\ClientFolio;
+    use Poirot\ProfileClient\ClientProfile;
+
 
     /**
-     * @method static Client ClientProfile()
+     * @method static ClientProfile ClientProfile()
+     * @method static ClientFolio   ClientFolio()
      */
     class Services extends \IOC
     { }

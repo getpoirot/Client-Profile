@@ -42,7 +42,7 @@ $r = $c->meUploadAvatar(fopen($file, 'rb'));
 
  */
 
-class Client
+class ClientProfile
     extends aClient
 {
     protected $serverUrl;

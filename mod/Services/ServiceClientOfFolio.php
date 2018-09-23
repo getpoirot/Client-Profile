@@ -6,14 +6,14 @@ use Module\ProfileClient\Module;
 use Poirot\ApiClient\Interfaces\Token\iTokenProvider;
 use Poirot\Application\aSapi;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use Poirot\ProfileClient\ClientProfile;
+use Poirot\ProfileClient\ClientFolio;
 use Poirot\Std\Struct\DataEntity;
 
 
-class ServiceClientOfProfile
+class ServiceClientOfFolio
     extends aServiceContainer
 {
-    const NAME = 'ClientProfile';
+    const NAME = 'ClientFolio';
     const CONF = 'client';
 
     /** @var string Service Name */
@@ -28,16 +28,15 @@ class ServiceClientOfProfile
     /**
      * Create Service
      *
-     * @return ClientProfile
+     * @return ClientFolio
      * @throws \Exception
      */
     function newService()
     {
-        $c = new ClientProfile(
+        $c = new ClientFolio(
             $this->getServerUrl()
             , $this->getTokenProvider()
         );
-
 
         return $c;
     }
