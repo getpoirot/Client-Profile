@@ -78,6 +78,9 @@ class ServiceClientOfProfile
         if (! $this->tokenProvider )
         {
             $tokenProvider = $this->_getConf(self::CONF, 'token_provider');
+            if ($tokenProvider instanceof \Closure)
+                $tokenProvider = $tokenProvider();
+
             if (! $tokenProvider instanceof iTokenProvider)
                 $tokenProvider = new instance($tokenProvider);
 
