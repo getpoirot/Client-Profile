@@ -32,9 +32,15 @@ class Response
             throw new exUnknownError();
 
 
+        $url = (! $this->getMeta('_url_') )
+            ?: ', When calling '. $this->getMeta('_url_');
+
         switch ($error['state']) {
             default:
-                throw new exServerError($error['state'].'::'.$error['message'], $error['code']);
+                throw new exServerError(
+                    $error['state'].'::'.$error['message'].$url
+                    , $error['code']
+                );
         }
     }
 }
